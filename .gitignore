@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Logs
 logs
 *.log
@@ -22,4 +23,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+=======
+>>>>>>> b69f22ab54f59745b10525552c807487609fef3f
 .qodo
