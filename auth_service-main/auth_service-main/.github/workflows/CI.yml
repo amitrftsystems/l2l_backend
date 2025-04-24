@@ -1,0 +1,58 @@
+# name: CI/CD Pipeline
+
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches:
+#       - main
+
+# jobs:
+#   build_and_test:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout Code
+#         uses: actions/checkout@v3
+
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: "16"
+
+#       - name: Install Dependencies
+#         run: npm install
+
+#       - name: Lint Code
+#         run: npm run lint
+
+#       - name: Run Test Cases
+#         run: npm test
+
+#       - name: Build Application
+#         run: npm run build
+
+#   qa_approval:
+#     needs: build_and_test
+#     runs-on: ubuntu-latest
+#     environment:
+#       name: qa # Configure the 'qa' environment in your repository settings with required reviewers
+#     steps:
+#       - name: Wait for QA Approval
+#         run: echo "Build successful. Waiting for QA team approval..."
+#     # This job will pause until a designated QA team member approves via the GitHub environment protection rules.
+
+#   management_notification:
+#     needs: qa_approval
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Notify Repository Owner & Management
+#         run: |
+#           echo "QA team approved the build. Sending notifications to the repository owner and management team..."
+#           # Example: Call a script or use an action to send notifications.
+#           # For instance, you could use a Slack notification action:
+#           # - name: Slack Notification
+#           #   uses: 8399538/slack-notify@v1
+#           #   with:
+#           #     slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+#           #     message: "The build for ${{ github.repository }} has passed QA and is ready for management review."
