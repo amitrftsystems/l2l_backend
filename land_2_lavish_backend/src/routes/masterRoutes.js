@@ -13,7 +13,7 @@ import { addCoApplicant } from "../controllers/masterController/co-applicant.js"
 
 import { addNewInstallmentPlan, addInstallmentDetails, getInstallmentPlans, getInstallmentPlanByName, updateInstallmentPlan, deleteInstallmentPlan } from "../controllers/masterController/plans.js";
 
-import { addNewPLC, getPLC, getPLCById, updatePLC, deletePLC } from "../controllers/masterController/plc.js";
+import {addNewPLC, getPLC, getPLCById, updatePLC, deletePLC } from '../controllers/masterController/plc.js';
 
 import { createProperty, updateProperty, getProperties, getPropertyById, deleteProperty } from "../controllers/masterController/property.js";
 
@@ -69,10 +69,11 @@ router.delete("/delete-installment-plan/:plan_name", deleteInstallmentPlan)
 
 // plc
 router.post("/add-new-plc", addNewPLC);
-router.get("/plcs", getPLC);
-router.get("/plc/:id", getPLCById);
-router.put("/plc/:id", updatePLC);
-router.delete("/plc/:id", deletePLC);
+router.get("/get-plcs", getPLC);
+router.get("/get-plc/:id", getPLCById); // Changed from :plc_id to :id
+router.put("/update-plc/:id", updatePLC); // More specific path
+router.delete("/delete-plc/:id", deletePLC);
+
 
 // property
 router.post("/property", createProperty);

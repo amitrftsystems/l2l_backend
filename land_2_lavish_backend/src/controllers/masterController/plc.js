@@ -51,7 +51,6 @@ export const addNewPLC = async (req, res) => {
   }
 };
 
-
 export const getPLC = async (req, res) => {
   try {
     const plc = await prisma.plc.findMany();
@@ -65,12 +64,11 @@ export const getPLC = async (req, res) => {
   }
 };
 
-
 export const getPLCById = async (req, res) => {
   try {
-    const { plc_id } = req.params;
+    const { id } = req.params; // Changed from plc_id to id to match route
     const plc = await prisma.plc.findUnique({
-      where: { plc_id }
+      where: { plc_id: Number(id) } // Convert to number if needed
     }); 
     if (!plc) {
       return res.status(404).json({ success: false, message: "PLC not found." });
@@ -82,14 +80,13 @@ export const getPLCById = async (req, res) => {
   }
 };
 
-
 export const updatePLC = async (req, res) => {
   try {
-    const { plc_id } = req.params;
+    const { id } = req.params; // Changed from plc_id to id
     const { plc_name, value, is_percentage, remarks } = req.body;
 
     const updatedPLC = await prisma.plc.update({
-      where: { plc_id },
+      where: { plc_id: Number(id) }, // Convert to number if needed
       data: { plc_name, value, is_percentage, remarks }
     });
 
@@ -104,12 +101,11 @@ export const updatePLC = async (req, res) => {
   }
 };
 
-
 export const deletePLC = async (req, res) => {
   try {
-    const { plc_id } = req.params;
+    const { id } = req.params; // Changed from plc_id to id
     const deletedPLC = await prisma.plc.delete({
-      where: { plc_id }
+      where: { plc_id: Number(id) } // Convert to number if needed
     }); 
     if (!deletedPLC) {
       return res.status(404).json({ success: false, message: "PLC not found." });
@@ -119,7 +115,4 @@ export const deletePLC = async (req, res) => {
     console.error("Error deleting PLC:", error);  
     res.status(500).json({ success: false, message: "Server error while deleting PLC." });
   }
-};  
-
-
-
+};

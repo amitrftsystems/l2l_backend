@@ -51,23 +51,45 @@ export const addInstallmentDetails = async (req, res) => {
             return res.status(404).json({ success: false, message: "Installment plan not found." });
         }
 
+        // Get current date (time set to beginning of day for accurate day difference calculation)
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
         // Create installment details for each installment
         const details = await Promise.all(
             installment_number.map((_, index) => {
-                // Ensure we have a valid date
-                let finalDueDate = new Date(due_date[index]);
-                if (!(finalDueDate instanceof Date) || isNaN(finalDueDate)) {
-                    // If no valid date, calculate from due_after_days
-                    const days = due_after_days[index] || 0;
-                    finalDueDate = new Date();
-                    finalDueDate.setDate(finalDueDate.getDate() + days);
+                let daysDifference = 0;
+                let finalDueDate = null;
+
+                // If due_date is provided, calculate days from today
+                if (due_date && due_date[index]) {
+                    finalDueDate = new Date(due_date[index]);
+                    finalDueDate.setHours(0, 0, 0, 0); // Normalize time for accurate day calculation
+                    
+                    // Calculate days difference
+                    const timeDiff = finalDueDate.getTime() - today.getTime();
+                    daysDifference = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+                    
+                    // Ensure days difference is not negative
+                    daysDifference = Math.max(0, daysDifference);
+                } 
+                // Otherwise use due_after_days if provided
+                else if (due_after_days && due_after_days[index] !== undefined) {
+                    daysDifference = parseInt(due_after_days[index]) || 0;
+                    finalDueDate = new Date(today);
+                    finalDueDate.setDate(finalDueDate.getDate() + daysDifference);
+                }
+                // Default to 0 days if neither is provided
+                else {
+                    daysDifference = 0;
+                    finalDueDate = new Date(today);
                 }
 
                 const data = {
                     installment_number: installment_number[index],
                     amount: amount[index] || 0,
                     percentage: percentage[index] || 0,
-                    due_after_days: due_after_days[index] || 0,
+                    due_after_days: daysDifference, // Always store calculated days
                     due_date: finalDueDate,
                     installment_plan: {
                         connect: {
